@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import './App.css';
 
 function App() {
   let [songs, setSongs] = useState()
