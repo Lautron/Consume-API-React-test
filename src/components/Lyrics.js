@@ -1,7 +1,21 @@
-import React from "react"
+import React, {useState} from "react"
 
 let Verse = props => {
-  return <li><strong>{props.original}</strong> ==> {props.trans}</li>
+  let [showTrans, setShowTrans] = useState(false);
+  let handleClick = () => setShowTrans(!showTrans)
+  return (
+    !showTrans ? 
+    <div onClick={handleClick}>
+      {props.original}
+    </div> :
+    <div onClick={handleClick}>
+      {props.original}
+      <br/>
+      {"-".repeat(50)}
+      <br/>
+      {props.trans}
+    </div>
+  )
 }
 
 let mapSongData = (verse, index) => {
