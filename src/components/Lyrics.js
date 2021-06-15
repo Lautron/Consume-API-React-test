@@ -23,8 +23,16 @@ let mapSongData = (verse, index) => {
 }
 
 let Lyrics = props => {
+  let [index, setIndex] = useState(0)
+  let verseArr = !props.songData ? ["Cargando"] : props.songData.map(mapSongData)
   if (props.display) {
-    return !props.songData ? "Cargando" : props.songData.map(mapSongData)
+    return (
+      <div>
+	{verseArr[index]}
+	<button onClick={() => setIndex(index - 1)}>{"<--"}</button>
+	<button onClick={() => setIndex(index + 1)}>{"-->"}</button>
+      </div>
+    )
   }
   return ""
 }
