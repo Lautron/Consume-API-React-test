@@ -3,34 +3,41 @@ import React, {useState} from "react"
 let Verse = props => {
   let [showTrans, setShowTrans] = useState(false);
   let handleClick = () => setShowTrans(!showTrans)
-  return (
-    !showTrans ? 
-    <div onClick={handleClick}>
-      {props.original}
-    </div> :
-    <div onClick={handleClick}>
-      {props.original}
-      <br/>
-      {"-".repeat(50)}
-      <br/>
-      {props.trans}
-    </div>
-  )
-}
-
-let mapSongData = (verse, index) => {
-  return <Verse key={index} original={verse[0]} trans={verse[1]}/> 
+  if (!showTrans) {
+    return (
+      <div>
+	<div>
+	  {props.original}
+	</div> 
+	<button onClick={handleClick}>Show translation</button>
+      </div> 
+    )
+  }
+  else {
+    return (
+      <div>
+	{props.original}
+	<hr/>
+	{props.trans}
+	<button onClick={props.reviewDifficulty} >Bad</button>
+	<button onClick={props.reviewDifficulty} >Good</button>
+	<button onClick={props.reviewDifficulty} >Easy</button>
+      </div>
+    )
+  }
 }
 
 let Lyrics = props => {
   let [index, setIndex] = useState(0)
-  let verseArr = !props.songData ? ["Cargando"] : props.songData.map(mapSongData)
+  let verseArr = !props.songData ? ["Cargando"] : props.songData.map(
+    (verse, index) => {
+      return <Verse key={index} reviewDifficulty={() => setIndex(index + 1)} original={verse[0]} trans={verse[1]}/> 
+}
+  )
   if (props.display) {
     return (
       <div>
 	{verseArr[index]}
-	<button onClick={() => setIndex(index - 1)}>{"<--"}</button>
-	<button onClick={() => setIndex(index + 1)}>{"-->"}</button>
       </div>
     )
   }
