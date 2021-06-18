@@ -22,13 +22,9 @@ function App() {
   let [songData, setSongData] = useState()
   let getSongData = async (title, author) => {
     changeDisplayState("songs", "lyrics") 
-    let result = []
     let response = await fetch(`/lyrics/${title}/${author}/en`)
     let responseJSON = await response.json()
-    for (let key in responseJSON){
-      result.push([key, responseJSON[key]])
-    }
-    setSongData(result)
+    setSongData(responseJSON)
   }
   let getSongs = async (playlistLink) => {
     let playlistId = playlistLink.split("/")[4].split("?")[0]
