@@ -3,6 +3,7 @@ import useChangeDisplayState from "./hooks/useChangeDisplayState";
 import SearchPlst from "./components/SearchPlst";
 import Songs from "./components/Songs";
 import Lyrics from "./components/Lyrics";
+import { getSongData, getSongs } from "./api";
 
 function App() {
   let [songs, setSongs] = useState();
@@ -12,24 +13,21 @@ function App() {
     lyrics: false,
     search: true,
   });
-  let getSongData = async (title, author) => {
+  let songsHandler = async (title, author) => {
     changeDisplayState("songs", "lyrics");
-    let response = await fetch(`/lyrics/${title}/${author}/en`);
-    let responseJSON = await response.json();
-    setSongData(responseJSON);
+    let fetchedSong = await getSongData(title, author);
+    setSongData(fetchedSong);
   };
-  let getSongs = async (playlistLink) => {
-    let playlistId = playlistLink.split("/")[4].split("?")[0];
-    let response = await fetch(`/songs/${playlistId}`);
-    let responseJSON = await response.json();
-    setSongs(responseJSON);
+  let searchHandler = async (playlistLink) => {
+    let fetchedPlaylistSongs = await getSongs(playlistLink);
+    setSongs(fetchedPlaylistSongs);
     changeDisplayState("songs", "search");
   };
   return (
     <div>
-      <SearchPlst display={shouldDisplay.search} handler={getSongs} />
+      <SearchPlst display={shouldDisplay.search} handler={searchHandler} />
       <Songs
-        handler={getSongData}
+        handler={songsHandler}
         display={shouldDisplay.songs}
         songs={songs}
       />
