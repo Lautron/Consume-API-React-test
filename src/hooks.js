@@ -1,16 +1,15 @@
 import { useState } from "react";
 
 let useChangeDisplayState = (initialState) => {
-  let [shouldDisplay, setShouldDisplay] = useState();
+  let [shouldDisplay, setShouldDisplay] = useState(initialState);
   let changeDisplayState = (...components) => {
-    let shouldDisplayCopy = { ...shouldDisplay };
-    components.map((component, index) => {
-      shouldDisplayCopy[component] = !shouldDisplayCopy[component];
-      return "";
+    setShouldDisplay((shouldDisplay) => {
+      components.forEach(
+        (component) => (shouldDisplay[component] = !shouldDisplay[component])
+      );
     });
-    setShouldDisplay(shouldDisplayCopy);
   };
-  return changeDisplayState;
+  return [shouldDisplay, changeDisplayState];
 };
 
 export default useChangeDisplayState;

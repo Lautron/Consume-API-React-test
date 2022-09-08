@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useChangeDisplayState from "hooks";
+import useChangeDisplayState from "./hooks";
 import SearchPlst from "./components/SearchPlst";
 import Songs from "./components/Songs";
 import Lyrics from "./components/Lyrics";
@@ -7,7 +7,7 @@ import Lyrics from "./components/Lyrics";
 function App() {
   let [songs, setSongs] = useState();
   let [songData, setSongData] = useState();
-  let changeDisplayState = useChangeDisplayState({
+  let [shouldDisplay, changeDisplayState] = useChangeDisplayState({
     songs: false,
     lyrics: false,
     search: true,
