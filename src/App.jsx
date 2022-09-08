@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useChangeDisplayState from "./hooks";
+import useChangeDisplayState from "./hooks/useChangeDisplayState";
 import SearchPlst from "./components/SearchPlst";
 import Songs from "./components/Songs";
 import Lyrics from "./components/Lyrics";
