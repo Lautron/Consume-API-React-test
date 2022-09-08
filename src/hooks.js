@@ -4,9 +4,12 @@ let useChangeDisplayState = (initialState) => {
   let [shouldDisplay, setShouldDisplay] = useState(initialState);
   let changeDisplayState = (...components) => {
     setShouldDisplay((shouldDisplay) => {
+      let shouldDisplayCopy = { ...shouldDisplay };
       components.forEach(
-        (component) => (shouldDisplay[component] = !shouldDisplay[component])
+        (component) =>
+          (shouldDisplayCopy[component] = !shouldDisplay[component])
       );
+      return shouldDisplayCopy;
     });
   };
   return [shouldDisplay, changeDisplayState];
