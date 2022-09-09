@@ -39,8 +39,8 @@ let SpotifySearchbar = (props) => {
     searchResults.map((result) => (
       <SearchResult
         key={`${result.name}, ${result.artists.join()}`}
+        onClickHandler={props.onClickHandler}
         {...result}
-        clickHandler={props.onClick}
       />
     ));
 
