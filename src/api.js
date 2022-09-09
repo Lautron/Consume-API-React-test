@@ -9,8 +9,16 @@ export const getSongData = (title, author) => {
   return responseJSON;
 };
 
-export const getSongs = (playlistLink) => {
+export const getSongsFromPlaylist = (playlistLink) => {
   let playlistId = playlistLink.split("/")[4].split("?")[0];
   let responseJSON = makeFetch(`/songs/${playlistId}`);
+  return responseJSON;
+};
+
+export const getSpotifySearchResults = (query) => {
+  if (!query) {
+    return;
+  }
+  let responseJSON = makeFetch(`/search-track/${query}`);
   return responseJSON;
 };
