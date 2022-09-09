@@ -21,6 +21,28 @@ const SearchResult = (props) => {
 
 let SpotifySearchbar = (props) => {
   const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    if (query.length > 3) {
+      (async function () {
+        let response = await throttledSearchAPI(query);
+        setSearchResults(response);
+      })();
+    } else {
+      setSearchResults([]);
+    }
+  }, [query]);
+
+  const results =
+    searchResults &&
+    searchResults.map((result) => (
+      <SearchResult
+        key={`${result.name}, ${result.artists.join()}`}
+        {...result}
+        clickHandler={props.onClick}
+      />
+    ));
 
   return (
     props.display && (
@@ -31,7 +53,7 @@ let SpotifySearchbar = (props) => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <input onClick={() => props.handler(query)} type="submit" />
+        {results}
       </div>
     )
   );
