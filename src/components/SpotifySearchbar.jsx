@@ -1,6 +1,6 @@
 import React from "react";
 
-let SearchPlst = (props) => {
+let SpotifySearchbar = (props) => {
   return !props.display ? (
     ""
   ) : (
@@ -15,4 +15,4 @@ let SearchPlst = (props) => {
     </div>
   );
 };
-export default SearchPlst;
+export default SpotifySearchbar;
