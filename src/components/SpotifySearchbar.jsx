@@ -12,9 +12,19 @@ const throttledSearchAPI = throttle(
 
 const SearchResult = (props) => {
   return (
-    <div onClick={() => props.onClickHandler(props.name, props.artists[0])}>
-      <img src={props.img_url} alt={`${props.name} album cover`} />
-      <strong>{props.name}</strong> by {props.artists.join(", ")}
+    <div
+      className="flex items-center bg-gray-100 w-96 min-h-20 hover:bg-gray-200 cursor-pointer p-2"
+      onClick={() => props.onClickHandler(props.name, props.artists[0])}
+    >
+      <img
+        className="h-16 w-16"
+        src={props.img_url}
+        alt={`${props.name} album cover`}
+      />
+      <div className="flex flex-col h-full p-2 ml-2">
+        <strong>{props.name}</strong>
+        <span>{props.artists.join(", ")}</span>
+      </div>
     </div>
   );
 };
@@ -46,9 +56,11 @@ let SpotifySearchbar = (props) => {
 
   return (
     props.display && (
-      <div>
+      <div className="flex flex-col items-center mt-10">
+        <h2 className="text-2xl m-5">Find a song to translate</h2>
         <input
-          style={{ width: "500px" }}
+          placeholder="Type a song title"
+          className="w-96 bg-gray-200 h-14 px-4"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
