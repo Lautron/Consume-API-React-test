@@ -1,27 +1,40 @@
 import React, { useState } from "react";
 
+const StyledButton = (props) => {
+  return (
+    <button className="bg-gray-300 rounded p-3" onClick={props.clickHandler}>
+      {props.text}
+    </button>
+  );
+};
+
 let Verse = (props) => {
   let [showTrans, setShowTrans] = useState(false);
-  let handleClick = () => setShowTrans(!showTrans);
-  if (!showTrans) {
-    return (
-      <div>
-        <div>{props.original}</div>
-        <button onClick={handleClick}>Show translation</button>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        {props.original}
-        <hr />
-        {props.trans}
-        <button onClick={props.reviewDifficulty}>Bad</button>
-        <button onClick={props.reviewDifficulty}>Good</button>
-        <button onClick={props.reviewDifficulty}>Easy</button>
-      </div>
-    );
-  }
+  let handleClick = () => setShowTrans((showTrans) => !showTrans);
+
+  const flashcardSideA = (
+    <StyledButton clickHandler={handleClick} text="Show translation" />
+  );
+
+  const difficulties = ["Hard", "Good", "Easy"];
+  const flashcardSideB = (
+    <>
+      <span>{props.trans}</span>
+      <br />
+      {difficulties.map((difficulty) => (
+        <StyledButton clickHandler={props.reviewDifficulty} text={difficulty} />
+      ))}
+    </>
+  );
+
+  return (
+    <div className="min-w-96 h-1/3 justify-between">
+      <span> {props.original} </span>
+      <hr />
+      {!showTrans && flashcardSideA}
+      {showTrans && flashcardSideB}
+    </div>
+  );
 };
 
 let Lyrics = (props) => {
@@ -39,7 +52,11 @@ let Lyrics = (props) => {
         );
       });
   if (props.display) {
-    return <div>{verseArr[index]}</div>;
+    return (
+      <div className="flex flex-col items-center w-full text-xl">
+        {verseArr[index]}
+      </div>
+    );
   }
   return "";
 };
