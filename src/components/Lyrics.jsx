@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import FlatQueue from "flatqueue";
+import Verse from "./Verse";
 
 const CONFIG = {
   priorityChange: {
@@ -12,46 +13,6 @@ const CONFIG = {
 };
 
 CONFIG.difficulties = Object.keys(CONFIG.priorityChange);
-
-const StyledButton = (props) => {
-  return (
-    <button className="bg-gray-300 rounded p-3" onClick={props.clickHandler}>
-      {props.text}
-    </button>
-  );
-};
-
-let Verse = (props) => {
-  let [showTrans, setShowTrans] = useState(false);
-  let handleClick = () => setShowTrans((showTrans) => !showTrans);
-
-  const flashcardSideA = (
-    <StyledButton clickHandler={handleClick} text="Show translation" />
-  );
-
-  const flashcardSideB = (
-    <>
-      <span>{props.trans}</span>
-      <br />
-      {CONFIG.difficulties.map((difficulty) => (
-        <StyledButton
-          clickHandler={() => props.handleDifficulty(difficulty)}
-          text={difficulty}
-          key={difficulty}
-        />
-      ))}
-    </>
-  );
-
-  return (
-    <div className="min-w-96 h-1/3 justify-between">
-      <span> {props.original} </span>
-      <hr />
-      {!showTrans && flashcardSideA}
-      {showTrans && flashcardSideB}
-    </div>
-  );
-};
 
 class PqueueWrapper {
   constructor(array) {
@@ -118,6 +79,7 @@ let Lyrics = (props) => {
             handleDifficulty={dispatchDifficulty}
             original={verse[0]}
             trans={verse[1]}
+            difficulties={CONFIG.difficulties}
           />
         );
       });
