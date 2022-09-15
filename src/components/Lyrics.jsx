@@ -15,7 +15,9 @@ const CONFIG = {
 CONFIG.difficulties = Object.keys(CONFIG.priorityChange);
 
 function createPqueueArray(array) {
-  return array.map(createPqueueItem);
+  return array.map((elem, index) =>
+    MinStablePqueue.createPqueueItem(elem, CONFIG.defaultDifficulty, index)
+  );
 }
 
 const usePriorityQueue = (array) => {

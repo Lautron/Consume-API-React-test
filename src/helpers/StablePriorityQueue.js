@@ -6,7 +6,7 @@ class MinStablePqueue {
     this.counter = array.length;
   }
 
-  orderFunc(a, b) {
+  static orderFunc(a, b) {
     let result = a.priority - b.priority;
     let they_are_equal = result === 0;
 
@@ -17,11 +17,11 @@ class MinStablePqueue {
     return result;
   }
 
-  static createPqueueItem(elem, priority, count) {
+  static createPqueueItem(elem, priority, index) {
     return {
       value: elem,
       priority: priority,
-      counter: count,
+      counter: index,
     };
   }
 
@@ -38,11 +38,7 @@ class MinStablePqueue {
   }
 
   push(item, priority) {
-    this.pqueue.push({
-      value: item,
-      priority: priority,
-      counter: this.counter++,
-    });
+    this.pqueue.push(this.createPqueueItem(item, priority, this.counter++));
   }
 }
 
