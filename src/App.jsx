@@ -14,7 +14,7 @@ function createPqueueArray(array) {
 }
 
 function App() {
-  let [songData, setSongData] = useState();
+  let [songDetails, setSongDetails] = useState({});
   let [shouldDisplay, changeDisplayState] = useChangeDisplayState({
     songs: false,
     lyrics: false,
@@ -23,9 +23,7 @@ function App() {
 
   const onSearchResultClick = async (title, author) => {
     changeDisplayState("search", "lyrics");
-    let fetchedSong = await getSongData(title, author);
-    const pqueue = new MinStablePqueue(createPqueueArray(fetchedSong));
-    setSongData(pqueue);
+    setSongDetails({ title: title, author: author });
   };
 
   return (
