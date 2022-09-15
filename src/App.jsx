@@ -3,6 +3,15 @@ import useChangeDisplayState from "./hooks/useChangeDisplayState";
 import SpotifySearchbar from "./components/SpotifySearchbar";
 import Lyrics from "./components/Lyrics";
 import { getSongData } from "./api";
+import MinStablePqueue from "./helpers/StablePriorityQueue";
+
+const DEFAULT_PRIORITY = 0;
+
+function createPqueueArray(array) {
+  return array.map((elem, index) =>
+    MinStablePqueue.createPqueueItem(elem, DEFAULT_PRIORITY, index)
+  );
+}
 
 function App() {
   let [songData, setSongData] = useState();
@@ -15,7 +24,8 @@ function App() {
   const onSearchResultClick = async (title, author) => {
     changeDisplayState("search", "lyrics");
     let fetchedSong = await getSongData(title, author);
-    setSongData(fetchedSong);
+    const pqueue = new MinStablePqueue(createPqueueArray(fetchedSong));
+    setSongData(pqueue);
   };
 
   return (
