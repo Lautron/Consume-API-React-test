@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import FlatQueue from "flatqueue";
+import TinyQueue from "tinyqueue";
 import Verse from "./Verse";
 
 const CONFIG = {
@@ -14,12 +14,21 @@ const CONFIG = {
 
 CONFIG.difficulties = Object.keys(CONFIG.priorityChange);
 
-class PqueueWrapper {
+class MinStablePqueue {
   constructor(array) {
-    this.pqueue = new FlatQueue();
-    array.forEach((_, index) =>
-      this.pqueue.push(index, CONFIG.defaultDifficulty)
-    );
+    this.pqueue = new TinyQueue(array, this.orderFunc);
+    this.counter = array.length;
+  }
+
+  orderFunc(a, b) {
+    let result = a.priority - b.priority;
+    let they_are_equal = result === 0;
+
+    if (they_are_equal) {
+      return a.counter - b.counter;
+    }
+
+    return result;
   }
 
   pop() {
@@ -31,20 +40,38 @@ class PqueueWrapper {
   }
 
   peekPriority() {
-    return this.pqueue.peekValue();
+    return this.pqueue.peek().priority;
   }
 
   push(item, priority) {
-    this.pqueue.push(item, priority);
+    this.pqueue.push({
+      value: item,
+      priority: priority,
+      counter: this.counter++,
+    });
   }
 }
 
+function createPqueueArray(array) {
+  const createPqueueItem = (elem, index) => {
+    return {
+      value: elem,
+      priority: CONFIG.defaultDifficulty,
+      counter: index,
+    };
+  };
+  return array.map(createPqueueItem);
+}
+
 const usePriorityQueue = (array) => {
-  const pqueue = useMemo(() => new PqueueWrapper(array), [array]);
-  let [current, setCurrent] = useState(0);
+  const pqueue = useMemo(
+    () => new MinStablePqueue(createPqueueArray(array)),
+    [array]
+  );
+  let [current, setCurrent] = useState([]);
 
   const pushBackAndSetNew = (priority) => {
-    const newIndex = pqueue.pop();
+    const newIndex = pqueue.pop().value;
     pqueue.push(newIndex, priority);
     setCurrent(newIndex);
     console.log(`newIndex: ${newIndex}`);
@@ -66,27 +93,21 @@ const usePriorityQueue = (array) => {
 };
 
 let Lyrics = (props) => {
-  let [index, dispatchDifficulty] = usePriorityQueue(props.songData);
-  if (props.songData) {
-    props.songData[index] && console.log(index, props.songData[index][0]);
-  }
-  let verseArr = !props.songData
-    ? ["Cargando"]
-    : props.songData.map((verse, index) => {
-        return (
-          <Verse
-            key={index}
-            handleDifficulty={dispatchDifficulty}
-            original={verse[0]}
-            trans={verse[1]}
-            difficulties={CONFIG.difficulties}
-          />
-        );
-      });
+  let [currentSong, dispatchDifficulty] = usePriorityQueue(props.songData);
+  let verse = (
+    <Verse
+      key={currentSong}
+      handleDifficulty={dispatchDifficulty}
+      original={currentSong[0]}
+      trans={currentSong[1]}
+      difficulties={CONFIG.difficulties}
+    />
+  );
+
   if (props.display) {
     return (
       <div className="flex flex-col items-center w-full text-xl">
-        {verseArr[index]}
+        {props.songData && verse}
       </div>
     );
   }
