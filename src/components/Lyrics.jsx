@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Verse from "./Verse";
+import getSongData from "../api.js";
 
 const CONFIG = {
   priorityChange: {
@@ -39,6 +40,9 @@ const usePriorityQueue = (pqueue) => {
 
 let Lyrics = (props) => {
   let [currentSong, dispatchDifficulty] = usePriorityQueue(props.songData);
+  let fetchedSong;
+  getSongData(props.songDetails).then((data) => (fetchedSong = data));
+
   let verse = (
     <Verse
       key={currentSong}
