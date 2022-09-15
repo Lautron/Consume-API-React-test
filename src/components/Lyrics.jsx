@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Verse from "./Verse";
-import MinStablePqueue from "../helpers/StablePriorityQueue";
 
 const CONFIG = {
   priorityChange: {
@@ -9,22 +8,11 @@ const CONFIG = {
     Good: 0,
     Easy: 5,
   },
-  defaultDifficulty: 0,
 };
 
 CONFIG.difficulties = Object.keys(CONFIG.priorityChange);
 
-function createPqueueArray(array) {
-  return array.map((elem, index) =>
-    MinStablePqueue.createPqueueItem(elem, CONFIG.defaultDifficulty, index)
-  );
-}
-
-const usePriorityQueue = (array) => {
-  const pqueue = useMemo(
-    () => new MinStablePqueue(createPqueueArray(array)),
-    [array]
-  );
+const usePriorityQueue = (pqueue) => {
   let [current, setCurrent] = useState([]);
 
   const pushBackAndSetNew = (priority) => {
