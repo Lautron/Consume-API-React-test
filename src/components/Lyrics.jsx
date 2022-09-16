@@ -9,7 +9,7 @@ const CONFIG = {
   priorityChange: {
     Again: -5,
     Hard: -1,
-    Good: 0,
+    Good: 1,
     Easy: 5,
   },
 };
@@ -25,12 +25,10 @@ function createPqueueArray(array) {
 const usePriorityQueue = (songDetails) => {
   const songLyrics = useRef(null);
   const [currentVerse, setCurrentVerse] = useState([]);
-  console.log("currentVerse", currentVerse);
   useEffect(() => {
     (async function () {
       let lyrics = await getSongData(songDetails);
       if (lyrics) {
-        console.log("lyrics", lyrics);
         songLyrics.current = new MinStablePqueue(createPqueueArray(lyrics));
         setCurrentVerse(songLyrics.current.peek().value);
       }
@@ -57,11 +55,11 @@ const usePriorityQueue = (songDetails) => {
       songLyrics.current.pop();
     }
     pushBackAndSetNew(newPriority);
-    //console.table(
-    //  songLyrics.current.toArray().map((item) => {
-    //    return { ...item, value: item.value[0] };
-    //  })
-    //);
+    console.table(
+      songLyrics.current.toArray().map((item) => {
+        return { ...item, value: item.value[0] };
+      })
+    );
   };
 
   return [currentVerse, dispatchDifficulty];
@@ -70,7 +68,6 @@ const usePriorityQueue = (songDetails) => {
 let Lyrics = (props) => {
   const [currentSong, dispatchDifficulty] = usePriorityQueue(props.songDetails);
   if (props.display && currentSong) {
-    console.log("currentSong: ", currentSong);
     let verse = (
       <Verse
         handleDifficulty={dispatchDifficulty}
