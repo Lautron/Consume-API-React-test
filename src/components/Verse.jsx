@@ -22,7 +22,10 @@ let Verse = (props) => {
       <br />
       {props.difficulties.map((difficulty) => (
         <StyledButton
-          clickHandler={() => props.handleDifficulty(difficulty)}
+          clickHandler={() => {
+            props.handleDifficulty(difficulty);
+            handleClick();
+          }}
           text={difficulty}
           key={difficulty}
         />
