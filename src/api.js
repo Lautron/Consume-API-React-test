@@ -4,8 +4,10 @@ const makeFetch = async (url) => {
   return responseJSON;
 };
 
-export const getSongData = (title, author) => {
-  let responseJSON = makeFetch(`/lyrics/${title}/${author}/en`);
+export const getSongData = (songDetails) => {
+  let responseJSON = makeFetch(
+    `/lyrics/${songDetails.title}/${songDetails.author}/en`
+  );
   return responseJSON;
 };
 
