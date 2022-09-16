@@ -8,6 +8,10 @@ const StyledButton = (props) => {
   );
 };
 
+const StyledVerseText = (props) => (
+  <div className="my-4 w-full"> {props.children} </div>
+);
+
 let Verse = (props) => {
   let [showTrans, setShowTrans] = useState(false);
   let handleClick = () => setShowTrans((showTrans) => !showTrans);
@@ -18,8 +22,7 @@ let Verse = (props) => {
 
   const flashcardSideB = (
     <>
-      <span>{props.trans}</span>
-      <br />
+      <StyledVerseText> {props.trans} </StyledVerseText>
       {props.difficulties.map((difficulty) => (
         <StyledButton
           clickHandler={() => {
@@ -34,8 +37,8 @@ let Verse = (props) => {
   );
 
   return (
-    <div className="min-w-96 h-1/3 justify-between">
-      <span> {props.original} </span>
+    <div className="min-w-96 h-1/3 justify-between mt-10">
+      <StyledVerseText> {props.original} </StyledVerseText>
       <hr />
       {!showTrans && flashcardSideA}
       {showTrans && flashcardSideB}
