@@ -2,7 +2,7 @@ import TinyQueue from "tinyqueue";
 
 class MinStablePqueue {
   constructor(array) {
-    this.pqueue = new TinyQueue(array, this.orderFunc);
+    this.pqueue = new TinyQueue(array, MinStablePqueue.orderFunc);
     this.counter = array.length;
   }
 
@@ -38,7 +38,16 @@ class MinStablePqueue {
   }
 
   push(item, priority) {
-    this.pqueue.push(this.createPqueueItem(item, priority, this.counter++));
+    this.pqueue.push(
+      MinStablePqueue.createPqueueItem(item, priority, this.counter++)
+    );
+  }
+
+  toArray() {
+    let array = [];
+    while (this.pqueue.length) array.push(this.pqueue.pop());
+    this.pqueue = new TinyQueue(array, MinStablePqueue.orderFunc);
+    return array;
   }
 }
 
