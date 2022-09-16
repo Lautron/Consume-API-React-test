@@ -27,12 +27,12 @@ const usePriorityQueue = (songDetails) => {
   const [currentVerse, setCurrentVerse] = useState([]);
   console.log("currentVerse", currentVerse);
   useEffect(() => {
-    getSongData(songDetails).then((data) => {
-      let lyrics = data;
+    (async function () {
+      let lyrics = await getSongData(songDetails);
       console.log("lyrics");
       songLyrics.current = new MinStablePqueue(createPqueueArray(lyrics));
       setCurrentVerse(songLyrics.current.peek().value);
-    });
+    })();
   }, [songDetails]);
 
   const pushBackAndSetNew = (priority) => {
