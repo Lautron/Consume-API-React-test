@@ -23,16 +23,18 @@ let Verse = (props) => {
   const flashcardSideB = (
     <>
       <StyledVerseText> {props.trans} </StyledVerseText>
-      {props.difficulties.map((difficulty) => (
-        <StyledButton
-          clickHandler={() => {
-            props.handleDifficulty(difficulty);
-            handleClick();
-          }}
-          text={difficulty}
-          key={difficulty}
-        />
-      ))}
+      <div className="flex justify-center">
+        {props.difficulties.map((difficulty) => (
+          <StyledButton
+            clickHandler={() => {
+              props.handleDifficulty(difficulty);
+              handleClick();
+            }}
+            text={difficulty}
+            key={difficulty}
+          />
+        ))}
+      </div>
     </>
   );
 
