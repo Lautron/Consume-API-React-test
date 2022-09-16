@@ -29,9 +29,11 @@ const usePriorityQueue = (songDetails) => {
   useEffect(() => {
     (async function () {
       let lyrics = await getSongData(songDetails);
-      console.log("lyrics");
-      songLyrics.current = new MinStablePqueue(createPqueueArray(lyrics));
-      setCurrentVerse(songLyrics.current.peek().value);
+      if (lyrics) {
+        console.log("lyrics", lyrics);
+        songLyrics.current = new MinStablePqueue(createPqueueArray(lyrics));
+        setCurrentVerse(songLyrics.current.peek().value);
+      }
     })();
   }, [songDetails]);
 
@@ -69,7 +71,7 @@ let Lyrics = (props) => {
   const [currentSong, dispatchDifficulty] = usePriorityQueue(props.songDetails);
   if (props.display && currentSong) {
     console.log("currentSong: ", currentSong);
-    let verse = currentSong && (
+    let verse = (
       <Verse
         handleDifficulty={dispatchDifficulty}
         original={currentSong[0]}
@@ -78,7 +80,9 @@ let Lyrics = (props) => {
       />
     );
     return (
-      <div className="flex flex-col items-center w-full text-xl">{verse}</div>
+      <div className="flex flex-col items-center w-full text-xl">
+        {currentSong[0] ? verse : "Loading..."}
+      </div>
     );
   }
   return "";

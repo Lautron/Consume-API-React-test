@@ -5,6 +5,10 @@ const makeFetch = async (url) => {
 };
 
 export const getSongData = (songDetails) => {
+  if (songDetails.title === undefined || songDetails.author === undefined) {
+    return null;
+  }
+
   let responseJSON = makeFetch(
     `/lyrics/${songDetails.title}/${songDetails.author}/en`
   );
