@@ -31,6 +31,7 @@ let Verse = (props) => {
 
   const flashcardSideB = (
     <>
+      <hr />
       <StyledVerseText> {props.trans} </StyledVerseText>
       <ButtonsContainer>
         {props.difficulties.map((difficulty) => (
@@ -50,7 +51,6 @@ let Verse = (props) => {
   return (
     <div className="min-w-96 h-1/3 justify-between mt-10 mx-5">
       <StyledVerseText> {props.original} </StyledVerseText>
-      <hr />
       {!showTrans && flashcardSideA}
       {showTrans && flashcardSideB}
     </div>
