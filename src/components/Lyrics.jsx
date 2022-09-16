@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Verse from "./Verse";
-import getSongData from "../api.js";
+import { getSongData } from "../api.js";
+import MinStablePqueue from "../helpers/StablePriorityQueue";
+
+const DEFAULT_PRIORITY = 0;
 
 const CONFIG = {
   priorityChange: {
@@ -13,51 +16,69 @@ const CONFIG = {
 
 CONFIG.difficulties = Object.keys(CONFIG.priorityChange);
 
-const usePriorityQueue = (pqueue) => {
-  let [current, setCurrent] = useState([]);
+function createPqueueArray(array) {
+  return array.map((elem, index) =>
+    MinStablePqueue.createPqueueItem(elem, DEFAULT_PRIORITY, index)
+  );
+}
+
+const usePriorityQueue = (songDetails) => {
+  const songLyrics = useRef(null);
+  const [currentVerse, setCurrentVerse] = useState([]);
+  console.log("currentVerse", currentVerse);
+  useEffect(() => {
+    getSongData(songDetails).then((data) => {
+      let lyrics = data;
+      console.log("lyrics");
+      songLyrics.current = new MinStablePqueue(createPqueueArray(lyrics));
+      setCurrentVerse(songLyrics.current.peek().value);
+    });
+  }, [songDetails]);
 
   const pushBackAndSetNew = (priority) => {
-    const newIndex = pqueue.pop().value;
-    pqueue.push(newIndex, priority);
-    setCurrent(newIndex);
+    const newIndex = songLyrics.current.pop().value;
+    songLyrics.current.push(newIndex, priority);
     console.log(`newIndex: ${newIndex}`);
+    setCurrentVerse(newIndex);
   };
 
-  const dispatch = (difficulty) => {
-    const oldPriority = pqueue.peekPriority();
+  const dispatchDifficulty = (difficulty) => {
+    if (songLyrics.current.size < 1) {
+      return;
+    }
+    const oldPriority = songLyrics.current.peekPriority();
     const newPriority = oldPriority + CONFIG.priorityChange[difficulty];
     console.log(
       `oldPriority: ${oldPriority}, newPriority: ${newPriority}, difficulty: ${difficulty}`
     );
     if (newPriority > 10) {
-      pqueue.pop();
+      songLyrics.current.pop();
     }
     pushBackAndSetNew(newPriority);
+    //console.table(
+    //  songLyrics.current.toArray().map((item) => {
+    //    return { ...item, value: item.value[0] };
+    //  })
+    //);
   };
 
-  return [current, dispatch];
+  return [currentVerse, dispatchDifficulty];
 };
 
 let Lyrics = (props) => {
-  let [currentSong, dispatchDifficulty] = usePriorityQueue(props.songData);
-  let fetchedSong;
-  getSongData(props.songDetails).then((data) => (fetchedSong = data));
-
-  let verse = (
-    <Verse
-      key={currentSong}
-      handleDifficulty={dispatchDifficulty}
-      original={currentSong[0]}
-      trans={currentSong[1]}
-      difficulties={CONFIG.difficulties}
-    />
-  );
-
-  if (props.display) {
+  const [currentSong, dispatchDifficulty] = usePriorityQueue(props.songDetails);
+  if (props.display && currentSong) {
+    console.log("currentSong: ", currentSong);
+    let verse = currentSong && (
+      <Verse
+        handleDifficulty={dispatchDifficulty}
+        original={currentSong[0]}
+        trans={currentSong[1]}
+        difficulties={CONFIG.difficulties}
+      />
+    );
     return (
-      <div className="flex flex-col items-center w-full text-xl">
-        {props.songData && verse}
-      </div>
+      <div className="flex flex-col items-center w-full text-xl">{verse}</div>
     );
   }
   return "";
