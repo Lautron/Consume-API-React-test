@@ -2,16 +2,6 @@ import React, { useState } from "react";
 import useChangeDisplayState from "./hooks/useChangeDisplayState";
 import SpotifySearchbar from "./components/SpotifySearchbar";
 import Lyrics from "./components/Lyrics";
-import { getSongData } from "./api";
-import MinStablePqueue from "./helpers/StablePriorityQueue";
-
-const DEFAULT_PRIORITY = 0;
-
-function createPqueueArray(array) {
-  return array.map((elem, index) =>
-    MinStablePqueue.createPqueueItem(elem, DEFAULT_PRIORITY, index)
-  );
-}
 
 function App() {
   let [songDetails, setSongDetails] = useState({});
@@ -32,7 +22,7 @@ function App() {
         display={shouldDisplay.search}
         onClickHandler={onSearchResultClick}
       />
-      <Lyrics display={shouldDisplay.lyrics} songData={songData} />
+      <Lyrics display={shouldDisplay.lyrics} songDetails={songDetails} />
     </div>
   );
 }
