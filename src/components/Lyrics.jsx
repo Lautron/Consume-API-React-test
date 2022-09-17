@@ -30,16 +30,27 @@ const usePriorityQueue = (songDetails) => {
       let lyrics = await getSongData(songDetails);
       if (lyrics) {
         songLyrics.current = new MinStablePqueue(createPqueueArray(lyrics));
-        setCurrentVerse(songLyrics.current.peek().value);
+        // TODO find way to make first element behave the same way as the rest
+        let firstVerse = songLyrics.current.pop().value;
+        setCurrentVerse(firstVerse);
+        songLyrics.current.push(firstVerse, DEFAULT_PRIORITY);
       }
     })();
   }, [songDetails]);
 
+  let prevIndex = [];
   const pushBackAndSetNew = (priority) => {
-    const newIndex = songLyrics.current.pop().value;
+    let newIndex = songLyrics.current.pop().value;
+    let auxPriority = priority;
+    while (newIndex[0] === prevIndex[0]) {
+      console.log(prevIndex, newIndex);
+      songLyrics.current.push(newIndex, auxPriority++);
+      newIndex = songLyrics.current.pop().value;
+    }
     songLyrics.current.push(newIndex, priority);
     console.log(`newIndex: ${newIndex}`);
     setCurrentVerse(newIndex);
+    prevIndex = newIndex;
   };
 
   const dispatchDifficulty = (difficulty) => {
